@@ -3,13 +3,14 @@ services:
   pgdb:
     image: postgres:${PGV:-latest}
     ports:
-      - 5432:5432
+      - "5532:5432"
     security_opt:
       - seccomp:unconfined
     volumes:
       - ./scripts/chmod_ssl.sh:/home/certdir/chmod_ssl.sh
       - ./scripts/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - ../.travis/travis_ssl_users.sh:/home/scripts/travis_ssl_users.sh
+      - ../.travis/travis_configure_replication.sh:/docker-entrypoint-initdb.d/travis_configure_replication.sh
       - ../certdir/server:/home/certdir
     entrypoint:
       - bash
@@ -18,6 +19,8 @@ services:
       - SSL=${SSL:-yes}
       - XA=${XA:-yes}
       - SCRAM=${SCRAM:-yes}
+      - REPLICATION=Y
+      - PG_DATADIR=/var/lib/postgresql/data
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=
       - POSTGRES_DB=postgres

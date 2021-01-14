@@ -10,7 +10,7 @@ fi
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     SET password_encryption='$PASSWORD_ENCRYPTION';
-    CREATE USER test with password 'test';
+    CREATE USER test with password 'test' REPLICATION;
     CREATE DATABASE test OWNER test;
 EOSQL
 
